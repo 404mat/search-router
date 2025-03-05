@@ -18,3 +18,51 @@ https://unduck.link?q=%s
 DuckDuckGo does their redirects server side. Their DNS is...not always great. Result is that it often takes ages.
 
 I solved this by doing all of the work client side. Once you've went to https://unduck.link once, the JS is all cache'd and will never need to be downloaded again. Your device does the redirects, not me.
+
+## Getting Started
+
+To start the project, follow these steps:
+
+1.  Install the dependencies using pnpm:
+
+    ```bash
+    pnpm install
+    ```
+
+2.  Start the development server:
+
+    ```bash
+    pnpm run dev
+    ```
+
+    This will start the development server and open the project in your browser.
+
+Now add this url as your search engine alias :
+
+```
+http://localhost:8713?q=%s
+```
+
+## Running locally via Docker
+
+Build and run via docker compose
+
+```sh
+docker compose up
+```
+
+Or without compose
+
+```sh
+# build
+docker build -t unduck:latest -f docker/Dockerfile .
+
+# run
+docker run --rm -p 80:80 unduck:latest
+```
+
+Now add this url as your search engine alias :
+
+```
+http://localhost:80?q=%s
+```
