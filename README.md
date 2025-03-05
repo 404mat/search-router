@@ -1,6 +1,10 @@
-# Unduck
+# Search Router
 
-DuckDuckGo's bang redirects are too slow. Add the following URL as a custom search engine to your browser. Enables all of DuckDuckGo's bangs to work, but much faster.
+Per the upstream repo's words :
+
+> DuckDuckGo's bang redirects are too slow. Add the following URL as a custom search engine to your browser. Enables all of DuckDuckGo's bangs to work, but much faster.
+
+This fork is an attempt to improve the project for my personnal use by implementing some of the good ideas provided in the project's PRs, and adding some things I would consider useful.
 
 ```
 https://unduck.link?q=%s
