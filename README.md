@@ -40,7 +40,7 @@ To start the project, follow these steps:
 Now add this url as your search engine alias :
 
 ```
-http://localhost:8713?q=%s
+http://localhost:5173?q=%s
 ```
 
 ## Running locally via Docker
