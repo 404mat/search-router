@@ -8,18 +8,36 @@ function noSearchDefaultPageRender() {
     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
       <div class="content-container">
         <h1>Search Router</h1>
-        <p>DuckDuckGo's bang redirects are too slow. Add the following URL as a custom search engine to your browser. Enables <a href="https://duckduckgo.com/bang.html" target="_blank">all of DuckDuckGo's bangs.</a></p>
+        <p>DuckDuckGo's bang redirects are too slow. Add the following URL as a custom search engine to your browser. It enables <a href="https://duckduckgo.com/bang.html" target="_blank">all of DuckDuckGo's bangs.</a></p>
         <div class="url-container"> 
           <input 
             type="text" 
             class="url-input"
+            id="url-input"
             value="${currentUrl}?q=%s"
             readonly 
           />
-          <button class="copy-button">
+          <button class="copy-button" id="copy-button">
             <img src="/clipboard.svg" alt="Copy" />
           </button>
         </div>
+
+        <div class="customize-container">
+          <h4>Want to customize the default bang ? Add it to the URL like this.</h4>
+          <div class="url-container"> 
+            <input 
+              type="text" 
+              class="url-input"
+              id="url-default-input"
+              value="${currentUrl}?q=%s&default=g"
+              readonly 
+            />
+            <button class="copy-button" id="copy-default-button">
+              <img src="/clipboard.svg" alt="Copy" />
+            </button>
+          </div>
+        </div>
+        
       </div>
       <footer class="footer">
         <a href="https://t3.chat" target="_blank">t3.chat</a>
@@ -31,9 +49,15 @@ function noSearchDefaultPageRender() {
     </div>
   `;
 
-  const copyButton = app.querySelector<HTMLButtonElement>(".copy-button")!;
+  const copyButton = app.querySelector<HTMLButtonElement>("#copy-button")!;
+  const copyDefaultButton = app.querySelector<HTMLButtonElement>(
+    "#copy-default-button"
+  )!;
+  const urlInput = app.querySelector<HTMLInputElement>("#url-input")!;
+  const urlDefaultInput =
+    app.querySelector<HTMLInputElement>("#url-default-input")!;
   const copyIcon = copyButton.querySelector("img")!;
-  const urlInput = app.querySelector<HTMLInputElement>(".url-input")!;
+  const copyDefaultIcon = copyDefaultButton.querySelector("img")!;
 
   copyButton.addEventListener("click", async () => {
     await navigator.clipboard.writeText(urlInput.value);
@@ -43,14 +67,26 @@ function noSearchDefaultPageRender() {
       copyIcon.src = "/clipboard.svg";
     }, 2000);
   });
-}
 
-const LS_DEFAULT_BANG = localStorage.getItem("default-bang") ?? "g";
-const defaultBang = bangs.find((b) => b.t === LS_DEFAULT_BANG);
+  copyDefaultButton.addEventListener("click", async () => {
+    await navigator.clipboard.writeText(urlDefaultInput.value);
+    copyDefaultIcon.src = "/clipboard-check.svg";
+
+    setTimeout(() => {
+      copyDefaultIcon.src = "/clipboard.svg";
+    }, 2000);
+  });
+}
 
 function getBangredirectUrl() {
   const url = new URL(window.location.href);
   const query = url.searchParams.get("q")?.trim() ?? "";
+  const urlDefault =
+    url.searchParams.get("default")?.trim() ??
+    localStorage.getItem("default-bang") ??
+    "g";
+  const defaultBang = bangs.find((b) => b.t === urlDefault);
+
   if (!query) {
     noSearchDefaultPageRender();
     return null;
