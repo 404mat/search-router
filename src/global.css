@@ -164,6 +164,10 @@ textarea {
     color: #ddd;
   }
 
+  svg {
+    color: white;
+  }
+
   #app {
     background-color: #131313;
   }
