@@ -55,10 +55,10 @@ Or without compose
 
 ```sh
 # build
-docker build -t unduck:latest -f docker/Dockerfile .
+docker build -t searchrouter:latest -f docker/Dockerfile .
 
 # run
-docker run --rm -p 80:80 unduck:latest
+docker run --rm -p 80:80 searchrouter:latest
 ```
 
 Now add this url as your search engine alias :
