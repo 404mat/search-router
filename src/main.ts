@@ -1,6 +1,11 @@
+import "@fontsource/inter/latin-400.css";
+import "@fontsource/inter/latin-500.css";
+import "@fontsource/inter/latin-600.css";
+import "@fontsource/inter/latin-700.css";
+import "./global.css";
+
 import { bangs } from "./bang";
 import { customBangs } from "./custom-bangs";
-import "./global.css";
 
 function noSearchDefaultPageRender() {
   const currentUrl = window.location.href.replace(/\/+$/, "");
