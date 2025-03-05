@@ -6,6 +6,9 @@ Per the upstream repo's words :
 
 This fork is an attempt to improve the project for my personnal use by implementing some of the good ideas provided in the project's PRs, and adding some things I would consider useful.
 
+> [!WARNING]
+> I will probably delete this fork when the original code is updated with most of these new features, I do not plan on maintaining this !
+
 ```
 https://unduck.link?q=%s
 ```
