@@ -8,7 +8,6 @@ import { bangs } from "./bang";
 import { customBangs } from "./custom-bangs";
 
 function noSearchDefaultPageRender() {
-  const currentUrl = window.location.href.replace(/\/+$/, "");
   const app = document.querySelector<HTMLDivElement>("#app")!;
   app.innerHTML = `
     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
@@ -20,7 +19,7 @@ function noSearchDefaultPageRender() {
             type="text" 
             class="url-input"
             id="url-input"
-            value="${currentUrl}?q=%s"
+            value="${import.meta.env.VITE_PUBLIC_URL}?q=%s"
             readonly 
           />
           <button class="copy-button" id="copy-button">
@@ -35,7 +34,7 @@ function noSearchDefaultPageRender() {
               type="text" 
               class="url-input"
               id="url-default-input"
-              value="${currentUrl}?q=%s&default=g"
+              value="${import.meta.env.VITE_PUBLIC_URL}?q=%s&default=g"
               readonly 
             />
             <button class="copy-button" id="copy-default-button">

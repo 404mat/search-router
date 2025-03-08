@@ -1,7 +1,7 @@
 {
   "name": "search-router",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,9 +9,11 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@types/node": "^22.13.10",
     "typescript": "~5.7.2",
     "vite": "^6.1.0",
-    "vite-plugin-pwa": "^0.21.1"
+    "vite-plugin-pwa": "^0.21.1",
+    "vite-plugin-transform": "^2.0.1"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.5"
