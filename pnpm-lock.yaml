@@ -24,9 +24,6 @@ importers:
       vite-plugin-pwa:
         specifier: ^0.21.1
         version: 0.21.1(vite@6.1.0(@types/node@22.13.10)(terser@5.39.0))(workbox-build@7.3.0)(workbox-window@7.3.0)
-      vite-plugin-transform:
-        specifier: ^2.0.1
-        version: 2.0.1
 
 packages:
 
@@ -1678,9 +1675,6 @@ packages:
     peerDependenciesMeta:
       '@vite-pwa/assets-generator':
         optional: true
-
-  vite-plugin-transform@2.0.1:
-    resolution: {integrity: sha512-sI9SzcuFbCj04YHEmhw9C14kNnVq3QFLWq7eofjNnDWnw/p+i+6pnSvVZSx1GDVpW1ciZglrv794XEU/lGGvyA==}
 
   vite@6.1.0:
     resolution: {integrity: sha512-RjjMipCKVoR4hVfPY6GQTgveinjNuyLw+qruksLDvA5ktI1150VmcMBKmQaEWJhg/j6Uaf6dNCNA0AfdzUb/hQ==}
@@ -3642,8 +3636,6 @@ snapshots:
       workbox-window: 7.3.0
     transitivePeerDependencies:
       - supports-color
-
-  vite-plugin-transform@2.0.1: {}
 
   vite@6.1.0(@types/node@22.13.10)(terser@5.39.0):
     dependencies:
