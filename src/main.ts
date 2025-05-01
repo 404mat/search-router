@@ -105,7 +105,7 @@ function getBangredirectUrl() {
   // Remove the first bang from the query
   const cleanQuery = query.replace(/!\S+\s*/i, "").trim();
 
-  // e.g. If the query is just `!gh`, use `github.com` instead of `github.com/search?q=`
+  // If the query is just `!gh`, use `github.com` instead of `github.com/search?q=`
   if (cleanQuery === "")
     return selectedBang ? `https://${selectedBang.d}` : null;
 
