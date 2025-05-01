@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
-  <ShortName>Search Router</ShortName>
-  <Description>A fast, local-first search router</Description>
-  <Tags>search, router</Tags>
-  <InputEncoding>UTF-8</InputEncoding>
-  <Url type="text/html" template="%{VITE_PUBLIC_URL}%?q={searchTerms}" />
-  <Url type="application/x-suggestions+json" template="https://duckduckgo.com/ac/?q={searchTerms}&amp;type=list"/>
-</OpenSearchDescription>

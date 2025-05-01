@@ -7,15 +7,6 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   return {
     plugins: [
-      transformPlugin({
-        tStart: "%{",
-        tEnd: "}%",
-        replaceFiles: [resolve(join(__dirname, "public/opensearch.xml"))],
-        replace: {
-          VITE_PUBLIC_URL: env.VITE_PUBLIC_URL,
-        },
-      }),
-
       VitePWA({
         registerType: "autoUpdate",
         workbox: {
