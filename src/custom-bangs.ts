@@ -26,4 +26,13 @@ export const customBangs = [
     t: "bang",
     u: "https://duckduckgo.com/bangs?q={{{s}}}",
   },
+  {
+    c: "Online Services",
+    d: "www.google.com",
+    r: 0,
+    s: "Google (Clean)",
+    sc: "Google",
+    t: "gc",
+    u: "https://www.google.com/search?udm=14&q={{{s}}}",
+  },
 ];
