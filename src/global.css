@@ -164,10 +164,6 @@ textarea {
     color: #ddd;
   }
 
-  svg {
-    color: white;
-  }
-
   #app {
     background-color: #131313;
   }
@@ -191,7 +187,9 @@ textarea {
 
   .url-input {
     border-color: #3d3d3d;
+
     background-color: #191919;
+
     color: #fff;
   }
 

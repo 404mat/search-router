@@ -19,8 +19,8 @@ function noSearchDefaultPageRender() {
             type="text" 
             class="url-input"
             id="url-input"
-            value="${import.meta.env.VITE_PUBLIC_URL}?q=%s"
-            readonly 
+            value="${location.origin + location.pathname}?q=%s"
+            readonly
           />
           <button class="copy-button" id="copy-button">
             <img src="/clipboard.svg" alt="Copy" />
@@ -34,8 +34,8 @@ function noSearchDefaultPageRender() {
               type="text" 
               class="url-input"
               id="url-default-input"
-              value="${import.meta.env.VITE_PUBLIC_URL}?q=%s&default=g"
-              readonly 
+              value="${location.origin + location.pathname}?q=%s&default=g"
+              readonly
             />
             <button class="copy-button" id="copy-default-button">
               <img src="/clipboard.svg" alt="Copy" />
