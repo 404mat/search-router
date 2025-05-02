@@ -44,4 +44,13 @@ export const customBangs = [
     t: "twt",
     u: "https://twitter.com/search?q={{{s}}}",
   },
+  {
+    c: "Tech",
+    d: "grep.app",
+    r: 0,
+    s: "Grep.app",
+    sc: "Search GitHub fast(er)",
+    t: "grepcode",
+    u: "https://grep.app/search?q={{{s}}}",
+  },
 ];
