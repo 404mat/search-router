@@ -35,4 +35,13 @@ export const customBangs = [
     t: "gc",
     u: "https://www.google.com/search?udm=14&q={{{s}}}",
   },
+  {
+    c: "Online Services",
+    d: "twitter.com",
+    r: 9964,
+    s: "Twitter",
+    sc: "Social",
+    t: "twt",
+    u: "https://twitter.com/search?q={{{s}}}",
+  },
 ];
