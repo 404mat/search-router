@@ -37,7 +37,7 @@ export const customBangs = [
   },
   {
     c: "Online Services",
-    d: "twitter.com",
+    d: "www.twitter.com",
     r: 9964,
     s: "Twitter",
     sc: "Social",
@@ -49,8 +49,17 @@ export const customBangs = [
     d: "grep.app",
     r: 0,
     s: "Grep.app",
-    sc: "Search GitHub fast(er)",
+    sc: "Programming",
     t: "grepcode",
     u: "https://grep.app/search?q={{{s}}}",
+  },
+  {
+    c: "Shopping",
+    d: "facebook.com",
+    r: 0,
+    s: "Facebook Marketplace",
+    sc: "Online (marketplace)",
+    t: "fbm",
+    u: "https://www.facebook.com/marketplace/search?query={{{s}}}",
   },
 ];
