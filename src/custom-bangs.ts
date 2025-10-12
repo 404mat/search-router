@@ -1,12 +1,30 @@
 export const customBangs = [
   {
     c: "AI",
-    d: "chat.openai.com",
+    d: "chatgpt.com",
     r: 0,
     s: "ChatGPT",
     sc: "AI",
     t: "aic", // meaning "AI Chat"
-    u: "https://chat.openai.com?q={{{s}}}", // todo: have a way to set favorite model in local storage
+    u: "https://chatgpt.com?q={{{s}}}",
+  },
+  {
+    c: "AI",
+    d: "chatgpt.com",
+    r: 0,
+    s: "ChatGPT",
+    sc: "AI",
+    t: "gpt",
+    u: "https://chatgpt.com?q={{{s}}}",
+  },
+  {
+    c: "AI",
+    d: "chatgpt.com",
+    r: 0,
+    s: "ChatGPT",
+    sc: "AI",
+    t: "ai",
+    u: "https://chatgpt.com?q={{{s}}}",
   },
   {
     c: "Perplexity",
