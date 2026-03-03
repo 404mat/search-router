@@ -6,6 +6,7 @@ import "./global.css";
 
 import { bangs } from "./bang";
 import { customBangs } from "./custom-bangs";
+import { recordBangUsage, getSortedStats, getTotalSearches, getMostUsedBang, clearStats, exportStats } from "./stats";
 
 function noSearchDefaultPageRender() {
   const app = document.querySelector<HTMLDivElement>("#app")!;
@@ -48,6 +49,8 @@ function noSearchDefaultPageRender() {
         <a href="https://www.youtube.com/watch?v=_DnNzRaBWUU" target="_blank">how it works</a>
         •
         <a href="https://github.com/404mat/search-router" target="_blank">github</a>
+        •
+        <a href="${location.origin + location.pathname}?stats">view stats</a>
       </footer>
     </div>
   `;
@@ -78,6 +81,126 @@ function noSearchDefaultPageRender() {
     setTimeout(() => {
       copyDefaultIcon.src = "/clipboard.svg";
     }, 2000);
+  });
+}
+
+function renderStatsPage() {
+  const stats = getSortedStats();
+  const totalSearches = getTotalSearches();
+  const mostUsed = getMostUsedBang();
+  
+  const app = document.querySelector<HTMLDivElement>("#app")!;
+  
+  if (stats.length === 0) {
+    app.innerHTML = `
+      <div class="stats-page">
+        <div class="stats-container">
+          <div class="empty-state">
+            <div class="empty-icon">📊</div>
+            <h2>No Statistics Yet</h2>
+            <p>Start searching with bangs like <code>!g</code> or <code>!gh</code> to see your usage patterns here.</p>
+            <div class="stats-footer">
+              <a href="${location.origin + location.pathname}" class="action-btn primary">Back to Search Router</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  const maxCount = Math.max(...stats.map(([_, stat]) => stat.count));
+  const topStats = stats.slice(0, 10);
+
+  // Lookup function to get website name from bang
+  const getBangName = (bangTrigger: string): string => {
+    const allBangs = [...customBangs, ...bangs]; // customBangs first to override defaults
+    const bang = allBangs.find(b => b.t === bangTrigger);
+    return bang?.s || `!${bangTrigger}`;
+  };
+
+  app.innerHTML = `
+    <div class="stats-page">
+      <div class="stats-container">
+        <div class="stats-header">
+          <h1>Your Search Statistics</h1>
+          <p class="stats-subtitle">Track how you use bangs across the web</p>
+        </div>
+        
+        <div class="stats-grid">
+          <div class="stat-pill">
+            <div class="stat-number">${totalSearches.toLocaleString()}</div>
+            <div class="stat-desc">Total Searches</div>
+          </div>
+          <div class="stat-pill">
+            <div class="stat-number">${stats.length}</div>
+            <div class="stat-desc">Unique Bangs</div>
+          </div>
+          <div class="stat-pill">
+            <div class="stat-number">!${mostUsed?.bang}</div>
+            <div class="stat-desc">Most Used (${mostUsed?.count})</div>
+          </div>
+        </div>
+
+        <div class="chart-section">
+          <div class="chart-header">
+            <h2>Top Bangs</h2>
+            <p class="chart-subtitle">Your most frequently used search shortcuts</p>
+          </div>
+          <div class="vertical-chart">
+            ${topStats.map(([bang, stat], index) => {
+              const percentage = (stat.count / maxCount) * 100;
+              const name = getBangName(bang);
+              return `
+                <div class="chart-column" style="animation-delay: ${index * 80}ms">
+                  <div class="column-bar-wrapper">
+                    <div class="column-bar" data-height="${percentage}%" style="height: 0%"></div>
+                  </div>
+                  <div class="column-label" title="!${bang}">${name}</div>
+                  <div class="column-count">${stat.count}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+
+        <div class="stats-footer">
+          <button id="export-btn" class="action-btn">Export JSON</button>
+          <button id="clear-btn" class="action-btn danger">Clear Data</button>
+          <a href="${location.origin + location.pathname}" class="action-btn secondary">Back</a>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Animate bars after render
+  setTimeout(() => {
+    const bars = app.querySelectorAll<HTMLElement>('.column-bar');
+    bars.forEach(bar => {
+      bar.style.height = bar.dataset.height || '0%';
+    });
+  }, 100);
+
+  // Add event listeners
+  const exportBtn = app.querySelector<HTMLButtonElement>("#export-btn")!;
+  const clearBtn = app.querySelector<HTMLButtonElement>("#clear-btn")!;
+
+  exportBtn.addEventListener("click", () => {
+    const data = exportStats();
+    const blob = new Blob([data], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "search-stats.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  clearBtn.addEventListener("click", () => {
+    if (confirm("Clear all statistics? This cannot be undone.")) {
+      clearStats();
+      renderStatsPage();
+    }
   });
 }
 
@@ -122,8 +245,25 @@ function getBangredirectUrl() {
 }
 
 function doRedirect() {
+  const url = new URL(window.location.href);
+  
+  // Check if we should show stats page
+  if (url.searchParams.get("stats") !== null) {
+    renderStatsPage();
+    return;
+  }
+  
   const searchUrl = getBangredirectUrl();
   if (!searchUrl) return;
+  
+  // Record stats before redirect
+  const query = url.searchParams.get("q")?.trim() ?? "";
+  const match = query.match(/!(\S+)/i);
+  if (match) {
+    const bang = match[1].toLowerCase();
+    recordBangUsage(bang);
+  }
+  
   window.location.replace(searchUrl);
 }
 
