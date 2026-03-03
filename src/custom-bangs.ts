@@ -68,7 +68,7 @@ export const customBangs = [
     r: 0,
     s: "Grep.app",
     sc: "Programming",
-    t: "grepcode",
+    t: "grep",
     u: "https://grep.app/search?q={{{s}}}",
   },
   {
