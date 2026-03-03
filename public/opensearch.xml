@@ -5,6 +5,6 @@
   <Description>Search Router with Bangs!</Description>
   <InputEncoding>UTF-8</InputEncoding>
   <Url type="text/html" method="get" template="https://searchrouter.app/?q={searchTerms}"/>
-  <Url type="application/x-suggestions+json" method="get" template="https://duckduckgo.com/ac/?q={searchTerms}&type=list"/>
-  <moz:SearchForm>https://searchrouter.app/?q=</moz:SearchForm>
+  <Url type="application/x-suggestions+json" method="get" template="https://suggestqueries.google.com/complete/search?client=firefox&q={searchTerms}"/>
+  <moz:SearchForm>https://searchrouter.app/</moz:SearchForm>
 </OpenSearchDescription>
