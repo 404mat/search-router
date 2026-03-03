@@ -1,13 +1,13 @@
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 
+import { cloudflare } from "@cloudflare/vite-plugin";
+
 export default defineConfig({
-  plugins: [
-    VitePWA({
-      registerType: "autoUpdate",
-      workbox: {
-        globPatterns: ["**/*.{js,css,html}", "assets/inter*.woff2"],
-      },
-    }),
-  ],
+  plugins: [VitePWA({
+    registerType: "autoUpdate",
+    workbox: {
+      globPatterns: ["**/*.{js,css,html}", "assets/inter*.woff2"],
+    },
+  }), cloudflare()],
 });
