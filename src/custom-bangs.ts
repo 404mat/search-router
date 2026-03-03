@@ -80,4 +80,14 @@ export const customBangs = [
     t: "fbm",
     u: "https://www.facebook.com/marketplace/search?query={{{s}}}",
   },
+  // Google Maps changed their URL structure, so this bang is currently broken. It needs to be updated to work again.
+  {
+    c: "Online Services",
+    d: "google.com",
+    r: 0,
+    s: "Google Maps",
+    sc: "Maps",
+    t: "gm",
+    u: "https://google.com/maps/search/{{{s}}}",
+  },
 ];
