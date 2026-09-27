@@ -8,6 +8,10 @@ import { bangs } from "./bang";
 import { customBangs } from "./custom-bangs";
 import { recordBangUsage, getSortedStats, getTotalSearches, getMostUsedBang, clearStats, exportStats } from "./stats";
 
+async function copyToClipboard(text: string): Promise<void> {
+  await navigator.clipboard.writeText(text);
+}
+
 function noSearchDefaultPageRender() {
   const app = document.querySelector<HTMLDivElement>("#app")!;
   app.innerHTML = `
@@ -66,7 +70,7 @@ function noSearchDefaultPageRender() {
   const copyDefaultIcon = copyDefaultButton.querySelector("img")!;
 
   copyButton.addEventListener("click", async () => {
-    await navigator.clipboard.writeText(urlInput.value);
+    await copyToClipboard(urlInput.value);
     copyIcon.src = "/clipboard-check.svg";
 
     setTimeout(() => {
@@ -75,7 +79,7 @@ function noSearchDefaultPageRender() {
   });
 
   copyDefaultButton.addEventListener("click", async () => {
-    await navigator.clipboard.writeText(urlDefaultInput.value);
+    await copyToClipboard(urlDefaultInput.value);
     copyDefaultIcon.src = "/clipboard-check.svg";
 
     setTimeout(() => {
