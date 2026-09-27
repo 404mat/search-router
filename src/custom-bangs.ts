@@ -73,7 +73,7 @@ export const customBangs = [
   },
   {
     c: "Shopping",
-    d: "facebook.com",
+    d: "www.facebook.com/marketplace",
     r: 0,
     s: "Facebook Marketplace",
     sc: "Online (marketplace)",
