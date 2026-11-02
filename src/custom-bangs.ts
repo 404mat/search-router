@@ -91,6 +91,15 @@ export const customBangs = [
     u: "https://google.com/maps/search/{{{s}}}",
   },
   {
+    c: "Research",
+    d: "www.fragrantica.fr",
+    r: 0,
+    s: "Fragrantica",
+    sc: "Reference (fun)",
+    t: "frag",
+    u: "https://www.fragrantica.fr/search/?query={{{s}}}",
+  },
+  {
     c: "Tech",
     d: "npmx",
     r: 147,
