@@ -7,6 +7,7 @@ import "./global.css";
 import { bangs } from "./bang";
 import { customBangs } from "./custom-bangs";
 import { recordBangUsage, getSortedStats, getTotalSearches, getMostUsedBang, clearStats, exportStats } from "./stats";
+import { squarify } from "./treemap";
 
 async function copyToClipboard(text: string): Promise<void> {
   await navigator.clipboard.writeText(text);
@@ -92,19 +93,18 @@ function renderStatsPage() {
   const stats = getSortedStats();
   const totalSearches = getTotalSearches();
   const mostUsed = getMostUsedBang();
-  
+
   const app = document.querySelector<HTMLDivElement>("#app")!;
-  
+
   if (stats.length === 0) {
     app.innerHTML = `
       <div class="stats-page">
         <div class="stats-container">
           <div class="empty-state">
-            <div class="empty-icon">📊</div>
-            <h2>No Statistics Yet</h2>
-            <p>Start searching with bangs like <code>!g</code> or <code>!gh</code> to see your usage patterns here.</p>
+            <h2>No statistics yet</h2>
+            <p>Search with bangs like <code>!g</code> or <code>!gh</code> and this page will fill in.</p>
             <div class="stats-footer">
-              <a href="${location.origin + location.pathname}" class="action-btn primary">Back to Search Router</a>
+              <a href="${location.origin + location.pathname}" class="action-btn primary">Back</a>
             </div>
           </div>
         </div>
@@ -112,9 +112,6 @@ function renderStatsPage() {
     `;
     return;
   }
-
-  const maxCount = Math.max(...stats.map(([_, stat]) => stat.count));
-  const topStats = stats.slice(0, 10);
 
   // Lookup function to get website name from bang
   const getBangName = (bangTrigger: string): string => {
@@ -127,46 +124,15 @@ function renderStatsPage() {
     <div class="stats-page">
       <div class="stats-container">
         <div class="stats-header">
-          <h1>Your Search Statistics</h1>
-          <p class="stats-subtitle">Track how you use bangs across the web</p>
-        </div>
-        
-        <div class="stats-grid">
-          <div class="stat-pill">
-            <div class="stat-number">${totalSearches.toLocaleString()}</div>
-            <div class="stat-desc">Total Searches</div>
-          </div>
-          <div class="stat-pill">
-            <div class="stat-number">${stats.length}</div>
-            <div class="stat-desc">Unique Bangs</div>
-          </div>
-          <div class="stat-pill">
-            <div class="stat-number">!${mostUsed?.bang}</div>
-            <div class="stat-desc">Most Used (${mostUsed?.count})</div>
-          </div>
+          <h1>Search statistics</h1>
+          <p class="summary-line">
+            ${totalSearches.toLocaleString()} searches
+            · ${stats.length} bangs
+            · most used !${mostUsed?.bang} ${mostUsed ? `<span class="summary-count">${mostUsed.count.toLocaleString()}</span>` : ""}
+          </p>
         </div>
 
-        <div class="chart-section">
-          <div class="chart-header">
-            <h2>Top Bangs</h2>
-            <p class="chart-subtitle">Your most frequently used search shortcuts</p>
-          </div>
-          <div class="vertical-chart">
-            ${topStats.map(([bang, stat], index) => {
-              const percentage = (stat.count / maxCount) * 100;
-              const name = getBangName(bang);
-              return `
-                <div class="chart-column" style="animation-delay: ${index * 80}ms">
-                  <div class="column-bar-wrapper">
-                    <div class="column-bar" data-height="${percentage}%" style="height: 0%"></div>
-                  </div>
-                  <div class="column-label" title="!${bang}">${name}</div>
-                  <div class="column-count">${stat.count}</div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        </div>
+        <div class="treemap" id="treemap" role="list" aria-label="Bang usage tiles, sized by number of searches"></div>
 
         <div class="stats-footer">
           <button id="export-btn" class="action-btn">Export JSON</button>
@@ -177,13 +143,69 @@ function renderStatsPage() {
     </div>
   `;
 
-  // Animate bars after render
-  setTimeout(() => {
-    const bars = app.querySelectorAll<HTMLElement>('.column-bar');
-    bars.forEach(bar => {
-      bar.style.height = bar.dataset.height || '0%';
+  // Build one tile per bang; geometry comes from the squarified layout.
+  const MAX_TILES = 20;
+  const shown = stats.slice(0, MAX_TILES);
+  const rest = stats.slice(shown.length);
+  const basicTiles: Array<{ bang: string; name: string; count: number }> = shown.map(
+    ([bang, stat]) => ({ bang, name: getBangName(bang), count: stat.count })
+  );
+  if (rest.length > 0) {
+    basicTiles.push({
+      bang: `+${rest.length}`,
+      name: "more",
+      count: rest.reduce((sum, [, stat]) => sum + stat.count, 0),
     });
-  }, 100);
+  }
+
+  const container = app.querySelector<HTMLElement>("#treemap")!;
+  const weights = basicTiles.map((tile) => tile.count);
+  const tiles: Array<HTMLElement | null> = basicTiles.map((tile) => {
+    const countText = tile.count.toLocaleString();
+    const share = ((tile.count / totalSearches) * 100).toFixed(1);
+    const isMore = tile.name === "more";
+    const title = isMore
+      ? `${tile.bang} more bangs, ${countText} searches (${share}%)`
+      : `!${tile.bang} — ${tile.name} — ${countText} searches (${share}%)`;
+    const label = isMore
+      ? `<span class="tile-bang more-bang">+${tile.bang.slice(1)} more</span><span class="tile-count">${countText}</span>`
+      : `<span class="tile-name">${tile.name}</span><span class="tile-bang">!${tile.bang}</span><span class="tile-count">${countText}</span>`;
+    const el = document.createElement("div");
+    el.className = "tile" + (isMore ? " more" : "");
+    el.setAttribute("role", "listitem");
+    el.setAttribute("title", title);
+    el.setAttribute("aria-label", title);
+    el.innerHTML = label;
+    container.appendChild(el);
+    return el;
+  });
+
+  const GAP = 2; // inset between tiles, in px
+
+  const layout = () => {
+    const rect = container.getBoundingClientRect();
+    if (rect.width <= GAP || rect.height <= GAP) return;
+    const rects = squarify(weights, rect.width, rect.height);
+    rects.forEach((r, i) => {
+      const tile = tiles[i];
+      if (!tile || !r) return;
+      tile.style.left = `${r.x + GAP / 2}px`;
+      tile.style.top = `${r.y + GAP / 2}px`;
+      tile.style.width = `${Math.max(r.w - GAP, 0)}px`;
+      tile.style.height = `${Math.max(r.h - GAP, 0)}px`;
+
+      const fitAll = r.w >= 72 && r.h >= 62;   // name + bang + count
+      const fitCompact = r.w >= 44 && r.h >= 25; // "!bang  count" on one line
+      tile.classList.toggle("accent", i === 0);
+      tile.classList.toggle("detailed", fitAll);
+      tile.classList.toggle("compact", !fitAll && fitCompact);
+      tile.classList.toggle("bare", !fitCompact);
+    });
+  };
+
+  const ro = new ResizeObserver(layout);
+  ro.observe(container);
+  layout();
 
   // Add event listeners
   const exportBtn = app.querySelector<HTMLButtonElement>("#export-btn")!;
