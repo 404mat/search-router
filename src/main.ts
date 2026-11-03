@@ -282,12 +282,14 @@ function doRedirect() {
   const searchUrl = getBangredirectUrl();
   if (!searchUrl) return;
   
-  // Record stats before redirect
+  // Record stats before redirect — only for known bangs: bare queries ride
+  // the default bang and unknown tokens never resolve, so neither is counted.
   const query = url.searchParams.get("q")?.trim() ?? "";
   const match = query.match(/!(\S+)/i);
   if (match) {
     const bang = match[1].toLowerCase();
-    recordBangUsage(bang);
+    const known = [...customBangs, ...bangs].some((b) => b.t === bang);
+    if (known) recordBangUsage(bang);
   }
   
   window.location.replace(searchUrl);
